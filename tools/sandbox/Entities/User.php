@@ -2,7 +2,13 @@
 
 namespace Entities;
 
-/** @Entity @Table(name="users") */
+/** 
+ * @Entity
+ * @Table(name="users")
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="discr", type="string")
+ * @DiscriminatorMap({"user" = "User", "leader" = "Leader"})
+ */
 class User
 {
     /**
@@ -44,5 +50,18 @@ class User
             $this->address = $address;
             $address->setUser($this);
         }
+    }
+}
+
+/** @Entity */
+class Leader extends User
+{
+    /** @Column(type="string", length="20") */
+    private $what;
+
+    public function setWhat($what)
+    {
+        $this->what = $what;
+        return $this;
     }
 }

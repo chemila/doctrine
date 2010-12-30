@@ -14,7 +14,7 @@ use Doctrine\Common\ClassLoader,
     Doctrine\ORM\EntityManager,
     Doctrine\DBAL\Logging\EchoSQLLogger,
     Doctrine\Common\Cache\ArrayCache,
-    Entities\User, Entities\Address,
+    Entities\User, Entities\Address, Entities\Leader,
     Doctrine\Common\Util\Debug;
 
 require_once '../../lib/vendor/doctrine-common/lib/Doctrine/Common/ClassLoader.php';
@@ -65,21 +65,23 @@ $connectionOptions = array(
 $em = EntityManager::create($connectionOptions, $config);
 
 // PUT YOUR TEST CODE BELOW
+/**
 $user = new User;
 $address = new Address;
+$address->setStreet('beijing');
+$user->setName('Chemila');
+$leader->setName('Ethan');
+$leader->setWhat('a leader');
 
-// Create a test user
-/**
-    $user->setName('Garfield');
-    $em->persist($user);
-    $em->flush();
-*/
+$em->persist($user);
+$em->persist($leader);
+$em->flush();
+**/
 
-$q = $em->createQuery('select u from Entities\User u where u.name = ?1');
-$q->setParameter(1, 'Garfield');
-$garfield = $q->getSingleResult();
+$q = $em->createQuery();
+$q->setDql('SELECT l,UPPER(l.name) uname FROM Entities\User l WHERE l.name=:name');
+$q->setParameter('name', 'ethan');
+$r = $q->getResult();
 
-echo "Hello " . $garfield->getName() . "!" . PHP_EOL;
-
-// Debug
-Debug::dump($garfield);
+echo '<br>';
+Debug::dump($r);
